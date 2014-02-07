@@ -23,6 +23,31 @@ PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)-$(PKG_VERSION)
 
 include $(INCLUDE_DIR)/package.mk
 
+# copypasta from cmake.mk
+ifeq ($(CONFIG_CCACHE),)
+ ifeq ($(CONFIG_EXTERNAL_TOOLCHAIN),)
+  CMAKE_C_COMPILER:=$(TOOLCHAIN_DIR)/bin/$(TARGET_CC)
+  CMAKE_C_COMPILER_ARG1:=
+  CMAKE_CXX_COMPILER:=$(TOOLCHAIN_DIR)/bin/$(TARGET_CXX)
+  CMAKE_CXX_COMPILER_ARG1:=
+ else
+  CMAKE_C_COMPILER:=$(shell which $(TARGET_CC))
+  CMAKE_C_COMPILER_ARG1:=
+  CMAKE_CXX_COMPILER:=$(shell which $(TARGET_CXX))
+  CMAKE_CXX_COMPILER_ARG1:=
+ endif
+else
+  CCACHE:=$(shell which ccache)
+  ifeq ($(CCACHE),)
+    CCACHE:=$(STAGING_DIR_HOST)/bin/ccache
+  endif
+  CMAKE_C_COMPILER:=$(CCACHE)
+  CMAKE_C_COMPILER_ARG1:=$(TARGET_CC_NOCACHE)
+  CMAKE_CXX_COMPILER:=$(CCACHE)
+  CMAKE_CXX_COMPILER_ARG1:=$(TARGET_CXX_NOCACHE)
+endif
+# end of copypasta
+
 define Package/cjdns
   SECTION:=net
   CATEGORY:=Network
@@ -39,6 +64,7 @@ define Build/Compile
 		CFLAGS="$(TARGET_CFLAGS) $(EXTRA_CFLAGS)" \
 		CXXFLAGS="$(TARGET_CFLAGS) $(EXTRA_CFLAGS)" \
 		LDFLAGS="$(TARGET_LDFLAGS) $(EXTRA_LDFLAGS)" \
+		CC="$(CMAKE_C_COMPILER)" \
 		CROSS=true \
 		NO_PIE=true \
 		./do \
