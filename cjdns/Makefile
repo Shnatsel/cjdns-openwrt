@@ -22,7 +22,6 @@ PKG_SOURCE_VERSION:=master
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)-$(PKG_VERSION)
 
 include $(INCLUDE_DIR)/package.mk
-include $(INCLUDE_DIR)/cmake.mk
 
 define Package/cjdns
   SECTION:=net
@@ -34,20 +33,19 @@ define Package/cjdns
 endef
 
 TARGET_CFLAGS += -I$(STAGING_DIR)/usr/include
-CMAKE_OPTIONS += -DOPENWRT=1
-
-# OpenWRT messes around with the code quite a bit and makes the codestyle validator angry.
-CMAKE_OPTIONS += -DNO_CODESTYLE=1
-
-# OpenWRT's NACL is not built position independent.
-CMAKE_OPTIONS += -DWITH_PIE=0
-
-# Need to tell cjdns build process that there exists an nacl on the system.
-CMAKE_OPTIONS += -DHAVE_NACL=1
 
 define Build/Prepare
 	echo cjdns-build-environment
 	env
+endef
+
+define Build/Compile
+	CFLAGS="$(TARGET_CFLAGS) $(EXTRA_CFLAGS)" \
+	CXXFLAGS="$(TARGET_CFLAGS) $(EXTRA_CFLAGS)" \
+	LDFLAGS="$(TARGET_LDFLAGS) $(EXTRA_LDFLAGS)" \
+	CROSS=true \
+	NO_PIE=true \
+	./do
 endef
 
 define Package/cjdns/install
