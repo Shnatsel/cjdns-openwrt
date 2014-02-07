@@ -40,7 +40,7 @@ define Build/Prepare
 endef
 
 define Build/Compile
-	(cd $(PKG_BUILD_DIR);
+	(cd $(PKG_BUILD_DIR); \
 		CFLAGS="$(TARGET_CFLAGS) $(EXTRA_CFLAGS)" \
 		CXXFLAGS="$(TARGET_CFLAGS) $(EXTRA_CFLAGS)" \
 		LDFLAGS="$(TARGET_LDFLAGS) $(EXTRA_LDFLAGS)" \
