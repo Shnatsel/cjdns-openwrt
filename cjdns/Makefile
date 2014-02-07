@@ -34,11 +34,6 @@ endef
 
 TARGET_CFLAGS += -I$(STAGING_DIR)/usr/include
 
-define Build/Prepare
-	echo cjdns-build-environment
-	env
-endef
-
 define Build/Compile
 	(cd $(PKG_BUILD_DIR); \
 		CFLAGS="$(TARGET_CFLAGS) $(EXTRA_CFLAGS)" \
@@ -46,7 +41,7 @@ define Build/Compile
 		LDFLAGS="$(TARGET_LDFLAGS) $(EXTRA_LDFLAGS)" \
 		CROSS=true \
 		NO_PIE=true \
-		$(BUILD_DIR)/$(PKG_NAME)-$(PKG_VERSION)/do \
+		./do \
 	)
 endef
 
