@@ -46,7 +46,7 @@ define Build/Compile
 		LDFLAGS="$(TARGET_LDFLAGS) $(EXTRA_LDFLAGS)" \
 		CROSS=true \
 		NO_PIE=true \
-		$(BUILD_DIR)/$(PKG_NAME)-$(PKG_VERSION)/do
+		$(BUILD_DIR)/$(PKG_NAME)-$(PKG_VERSION)/do \
 	)
 endef
 
