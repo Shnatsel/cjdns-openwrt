@@ -45,7 +45,10 @@ CMAKE_OPTIONS += -DWITH_PIE=0
 # Need to tell cjdns build process that there exists an nacl on the system.
 CMAKE_OPTIONS += -DHAVE_NACL=1
 
-env
+define Build/Prepare
+	echo cjdns-build-environment
+	env
+endef
 
 define Package/cjdns/install
 	$(INSTALL_DIR) $(1)/usr/sbin
