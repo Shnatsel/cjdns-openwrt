@@ -40,12 +40,14 @@ define Build/Prepare
 endef
 
 define Build/Compile
-	CFLAGS="$(TARGET_CFLAGS) $(EXTRA_CFLAGS)" \
-	CXXFLAGS="$(TARGET_CFLAGS) $(EXTRA_CFLAGS)" \
-	LDFLAGS="$(TARGET_LDFLAGS) $(EXTRA_LDFLAGS)" \
-	CROSS=true \
-	NO_PIE=true \
-	./do
+	(cd $(PKG_BUILD_DIR);
+		CFLAGS="$(TARGET_CFLAGS) $(EXTRA_CFLAGS)" \
+		CXXFLAGS="$(TARGET_CFLAGS) $(EXTRA_CFLAGS)" \
+		LDFLAGS="$(TARGET_LDFLAGS) $(EXTRA_LDFLAGS)" \
+		CROSS=true \
+		NO_PIE=true \
+		$(BUILD_DIR)/$(PKG_NAME)-$(PKG_VERSION)/do
+	)
 endef
 
 define Package/cjdns/install
